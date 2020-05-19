@@ -7,6 +7,20 @@ const debug = setupDebug(`phonetmp.core.helpers.entry.parsePhone`)
 const onlyDigitsRegexp = new RegExp(/[^0-9]+/, `g`)
 
 /**
+ * Maps format types to their parse functions.
+ * @type {Object<string, function>}
+ */
+const parseFormatMap = {
+  '+99 999 999 99?99': parseLongFormatA,
+  '+99 (0)999 999 99?99': parseLongFormatB,
+  '(999) 999-9999': parseMediumFormat,
+  '999.999.9999': parseMediumFormat,
+  '99 9999 9999': parseShortFormat,
+  '9999 999 999': parseShortFormat,
+  'unknown': parseUnknownFormat,
+}
+
+/**
  * Parses the phone number into its individual parts.
  *
  * The phone number object returned will contain as many of the following as it can pull from the phone number:
@@ -46,25 +60,14 @@ export function parsePhone(rawPhoneValue, format) {
   if (format.format) {
     safeFormat = format.format
   }
+  safeFormat = String(safeFormat)
 
-  switch (String(safeFormat)) {
-    case `+99 999 999 99?99`:
-      return parseLongFormatA(output, phoneNumber)
-
-    case `+99 (0)999 999 99?99`:
-      return parseLongFormatB(output, phoneNumber)
-
-    case `(999) 999-9999`:
-    case `999.999.9999`:
-      return parseMediumFormat(output, phoneNumber)
-
-    case `99 9999 9999`:
-    case `9999 999 999`:
-      return parseShortFormat(output, phoneNumber)
-
-    default:
-      return parseUnknownFormat(output, phoneNumber)
+  const parseFormat = parseFormatMap[safeFormat];
+  if (parseFormat) {
+    return parseFormat(output, phoneNumber);
   }
+
+  return parseFormatMap.unknown(output, phoneNumber);
 }
 
 /**
