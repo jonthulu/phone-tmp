@@ -1,0 +1,27 @@
+{
+  "name": "phone-tmp",
+  "version": "1.0.0",
+  "description": "Phone tmp code",
+  "main": "./src/parse-phone-jon.js",
+  "private": true,
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test nyc mocha --require @babel/register"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/register": "^7.9.0",
+    "babel-plugin-istanbul": "^6.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1"
+  },
+  "dependencies": {
+    "debug": "^4.1.1"
+  }
+}
